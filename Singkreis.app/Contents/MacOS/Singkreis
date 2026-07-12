@@ -1,0 +1,11 @@
+#!/bin/bash
+# Start-App für das Singkreis-Tool.
+# Diese App ist nur ein hübscher Starter: sie öffnet "start.command" im Terminal,
+# das alles einrichtet, den Server startet und den Browser öffnet.
+# (Im Terminal-Fenster beendet man das Tool mit Strg+C.)
+HERE="$(cd "$(dirname "$0")" && pwd)"
+PROJECT="$(cd "$HERE/../../.." && pwd)"   # .../Singkreis.app/Contents/MacOS -> Projektordner
+# Falls aus dem Internet geladen: macOS-Quarantäne des Projektordners entfernen,
+# damit auch "start.command" ohne Gatekeeper-Blockade startet.
+xattr -dr com.apple.quarantine "$PROJECT" 2>/dev/null
+open "$PROJECT/start.command"

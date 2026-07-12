@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Singkreis Sheet erstellen{% endblock %}
+{% block content %}
+
+<p class="back"><a href="/">← zurück zur Übersicht</a></p>
+<h1 class="page-h1">🎵 Singkreis Sheet erstellen</h1>
+
+{% if not songs %}
+<p class="empty">Keine Lieder ausgewählt. Gehe zur <a href="/">Übersicht</a>, hake Lieder an und klicke „Singkreis Sheet erstellen".</p>
+{% else %}
+<form method="post" action="/sheet/erstellen" onsubmit="return collect();">
+  <div class="field-row">
+    <label class="grow">Überschrift / Titel *
+      <input name="titel" value="" placeholder="z.B. Singkreis im Juni" required autofocus>
+    </label>
+    <label class="small">Datum
+      <input name="datum" type="date" value="{{ heute }}">
+    </label>
+  </div>
+
+  <p class="count">{{ songs|length }} Lieder · Reihenfolge mit ↑ ↓ ändern, ✕ entfernt ein Lied:</p>
+  <input type="hidden" name="ids" id="ids" value="{{ ids }}">
+  <ol id="songlist" class="songlist">
+    {% for s in songs %}
+    <li data-id="{{ s.id }}">
+      <span class="h">{{ s.liednummer or '—' }} · {{ s.liedtitel }}
+        {% if not (s.liedtext and s.liedtext.strip()) %}<span class="badge">kein Text</span>{% endif %}
+      </span>
+      <span class="ctrl">
+        <button type="button" onclick="mv(this,-1)" title="nach oben">↑</button>
+        <button type="button" onclick="mv(this,1)" title="nach unten">↓</button>
+        <button type="button" class="del" onclick="rm(this)" title="entfernen">✕</button>
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+
+  <div class="formbtns">
+    <button class="btn primary" type="submit">Singkreis Sheet erstellen</button>
+    <a class="btn" href="/">Abbrechen</a>
+  </div>
+</form>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function mv(btn, dir){
+    const li = btn.closest('li'), list = li.parentNode;
+    if(dir < 0 && li.previousElementSibling) list.insertBefore(li, li.previousElementSibling);
+    if(dir > 0 && li.nextElementSibling) list.insertBefore(li.nextElementSibling, li);
+  }
+  function rm(btn){
+    const li = btn.closest('li');
+    if(document.querySelectorAll('#songlist li').length <= 1){ alert('Mindestens ein Lied muss bleiben.'); return; }
+    li.remove();
+  }
+  function collect(){
+    const ids = [...document.querySelectorAll('#songlist li')].map(li => li.dataset.id);
+    if(!ids.length){ alert('Keine Lieder ausgewählt.'); return false; }
+    document.getElementById('ids').value = ids.join(',');
+    return true;
+  }
+</script>
+{% endblock %}

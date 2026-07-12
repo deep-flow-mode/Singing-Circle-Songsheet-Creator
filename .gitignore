@@ -1,0 +1,18 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# macOS
+.DS_Store
+
+# Microsoft Word Temp-/Sperr-Dateien
+~$*
+
+# Generierte QR-Bilder (werden aus den Links in app/config.py neu erzeugt)
+assets/qr/*.png
+
+# Generierte Liedzettel (Ausgabe) – der Ordner selbst bleibt via .gitkeep erhalten
+Singkreis Sheets/*.docx
+Singkreis Sheets/*.pdf

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Singkreis · Liederverwaltung{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-text">Liederverwaltung von</span>
+        {% if has_logo %}<img class="brand-logo" src="{{ url_for('logo') }}" alt="deep flow mode">
+        {% else %}<span class="brand-fallback"><span class="bf-deep">deep</span> <span class="bf-flow">flow</span> <span class="bf-mode">mode</span></span>{% endif %}
+      </a>
+      <span class="tag">Lieder verwalten &amp; Liedzettel drucken</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Lokale Datenbank: <code>data/{{ db_name }}</code> · <a href="/installation">Installationshilfe</a></div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

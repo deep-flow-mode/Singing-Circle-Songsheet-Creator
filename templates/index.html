@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="stats">
+  <div class="stat"><b>{{ stats.total }}</b><span>Lieder</span></div>
+  <div class="stat"><b>{{ stats.mit_text }}</b><span>mit Text</span></div>
+  <div class="stat"><b>{{ stats.ohne_text }}</b><span>ohne Text</span></div>
+  <a class="stat add" href="/neu"><b>+</b><span>Neues Lied</span></a>
+</section>
+
+<form class="searchbar" method="get" action="/">
+  <input type="search" name="q" value="{{ q }}" placeholder="Suchen in Titel &amp; Liedtext …" autofocus>
+  {% if only %}<input type="hidden" name="filter" value="{{ only }}">{% endif %}
+  <button type="submit">Suchen</button>
+  {% if q %}<a class="btn-clear" href="/{% if only %}?filter={{ only }}{% endif %}" title="Suche löschen">×</a>{% endif %}
+</form>
+
+<nav class="filters">
+  <a class="chip {{ 'on' if not only }}" href="/{{ '?q=' ~ q if q }}">Alle</a>
+  <a class="chip {{ 'on' if only=='mit' }}" href="/?filter=mit{{ '&q=' ~ q if q }}">Mit Text</a>
+  <a class="chip {{ 'on' if only=='ohne' }}" href="/?filter=ohne{{ '&q=' ~ q if q }}">Ohne Text</a>
+</nav>
+
+<p class="count">{{ songs|length }} Lieder angezeigt{% if q %} · Suche nach „{{ q }}"{% endif %}
+  <span class="hint">· Lieder anhaken, dann unten „Sheet erstellen"</span></p>
+
+{% if songs %}
+<table class="songs">
+  <thead>
+    <tr><th class="c-sel"></th><th class="c-nr">Nr</th><th class="c-title">Titel</th><th class="c-prev">Vorschau</th></tr>
+  </thead>
+  <tbody>
+    {% for s in songs %}
+    <tr class="row" onclick="toggle({{ s.id }})">
+      <td class="c-sel"><input type="checkbox" class="selbox" value="{{ s.id }}"
+            onclick="event.stopPropagation(); onCheck(this)"></td>
+      <td class="c-nr">{{ s.liednummer or '—' }}</td>
+      <td class="c-title">
+        {{ s.liedtitel }}
+        {% if not s.has_text %}<span class="badge">kein Text</span>{% endif %}
+      </td>
+      <td class="c-prev">{{ s.vorschau }}</td>
+    </tr>
+    <tr id="d{{ s.id }}" class="detail" hidden>
+      <td colspan="4">
+        {% if s.has_text %}<pre class="lyrics">{{ s.liedtext }}</pre>
+        {% else %}<p class="muted">— Noch kein Liedtext —</p>{% endif %}
+        <div class="meta">
+          {% if s.quelle %}<span>📄 {{ s.quelle }}</span>{% endif %}
+          <a href="/lied/{{ s.id }}/bearbeiten">✏️ Bearbeiten</a>
+          <a href="/lied/{{ s.id }}">Einzelansicht ↗</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Keine Lieder gefunden.</p>
+{% endif %}
+
+<div id="actionbar" class="actionbar" style="display:none">
+  <span><b id="selcount">0</b> ausgewählt</span>
+  <button type="button" class="primary" onclick="gotoSheet()">🎵 Singkreis Sheet erstellen</button>
+  <button type="button" class="ghost" onclick="clearSel()">Auswahl leeren</button>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function toggle(id){ var r = document.getElementById('d'+id); if(r){ r.hidden = !r.hidden; } }
+
+  const SEL_KEY = 'singkreis_auswahl';
+  function getSel(){ try { return new Set(JSON.parse(localStorage.getItem(SEL_KEY) || '[]')); } catch(e){ return new Set(); } }
+  function saveSel(s){ localStorage.setItem(SEL_KEY, JSON.stringify([...s])); }
+  function updateBar(){
+    const s = getSel();
+    document.getElementById('selcount').textContent = s.size;
+    document.getElementById('actionbar').style.display = s.size ? 'flex' : 'none';
+  }
+  function onCheck(cb){ const s = getSel(); cb.checked ? s.add(cb.value) : s.delete(cb.value); saveSel(s); updateBar(); }
+  function clearSel(){ saveSel(new Set()); document.querySelectorAll('.selbox').forEach(cb => cb.checked = false); updateBar(); }
+  function gotoSheet(){ const s = getSel(); if(s.size) location.href = '/sheet?ids=' + [...s].join(','); }
+  window.addEventListener('DOMContentLoaded', function(){
+    const s = getSel();
+    document.querySelectorAll('.selbox').forEach(cb => { cb.checked = s.has(cb.value); });
+    updateBar();
+  });
+</script>
+{% endblock %}

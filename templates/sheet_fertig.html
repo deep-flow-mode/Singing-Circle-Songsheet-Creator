@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Sheet erstellt{% endblock %}
+{% block content %}
+
+<article class="single">
+  <h1>✅ Sheet erstellt</h1>
+  <p>„<b>{{ titel }}</b>"{% if datum %} · {{ datum }}{% endif %} mit <b>{{ anzahl }}</b> Liedern.</p>
+  <p class="muted">Schriftgröße {{ font }} pt · {{ pages }} Seite(n) · gespeichert im Ordner
+     <code>Singkreis Sheets/</code> als <code>{{ filename }}</code></p>
+
+  <div class="actions">
+    <a class="btn primary" href="/sheet/download/{{ filename }}">⬇️ Word herunterladen</a>
+    {% if pdf_available %}
+    <a class="btn primary" id="pdfbtn" href="/sheet/pdf/{{ filename }}" onclick="pdfWait()">⬇️ PDF herunterladen</a>
+    {% endif %}
+    <a class="btn" href="/">Zur Übersicht</a>
+  </div>
+
+  {% if pdf_available %}
+  <p id="pdfhint" class="hint" style="margin-top:16px; display:none">⏳ PDF wird erstellt – Word öffnet sich dafür kurz im Hintergrund. Einen Moment bitte…</p>
+  {% else %}
+  <p class="hint" style="margin-top:16px">Ein PDF-Export ist hier nicht verfügbar (dafür wird Microsoft Word auf macOS benötigt).
+     Die Word-Datei lässt sich in Word oder Pages öffnen und dort als PDF speichern.</p>
+  {% endif %}
+
+  <p class="hint" style="margin-top:16px">Tipp: Datei in Word/Pages öffnen, prüfen und drucken.
+     Der Bereich für die QR-Codes ist unten schon freigehalten.</p>
+</article>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  function pdfWait(){
+    var h = document.getElementById('pdfhint');
+    if(!h) return;
+    h.style.display = 'block';
+    // Hinweis nach der erwarteten Konvertierungszeit wieder ausblenden
+    setTimeout(function(){ h.style.display = 'none'; }, 8000);
+  }
+</script>
+{% endblock %}

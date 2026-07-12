@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Lied bearbeiten' if s else 'Neues Lied' }} · Singkreis{% endblock %}
+{% block content %}
+
+<p class="back"><a href="{{ ('/lied/' ~ s.id) if s else '/' }}">← zurück</a></p>
+
+<article class="single">
+  <h1>{{ 'Lied bearbeiten' if s else 'Neues Lied anlegen' }}</h1>
+
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <form method="post" class="songform">
+    <div class="field-row">
+      <label class="small">Liednummer
+        <input name="liednummer" value="{{ s.liednummer if s else (suggested or '') }}"
+               {% if not s %}placeholder="z.B. {{ suggested }}"{% endif %}>
+      </label>
+      <label class="grow">Titel *
+        <input name="liedtitel" value="{{ s.liedtitel if s else '' }}" required autofocus>
+      </label>
+    </div>
+    <label>Liedtext
+      <textarea name="liedtext" rows="20" placeholder="Liedtext hier eingeben … (Zeilenumbrüche bleiben erhalten)">{{ s.liedtext if s else '' }}</textarea>
+    </label>
+    <div class="formbtns">
+      <button class="btn primary" type="submit">Speichern</button>
+      <a class="btn" href="{{ ('/lied/' ~ s.id) if s else '/' }}">Abbrechen</a>
+    </div>
+  </form>
+</article>
+
+{% endblock %}

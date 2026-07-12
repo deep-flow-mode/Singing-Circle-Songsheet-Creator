@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Sheet – passt nicht auf eine Seite{% endblock %}
+{% block content %}
+
+<p class="back"><a href="/sheet?ids={{ ids }}">← zurück zur Auswahl</a></p>
+
+<article class="single">
+  <h1>Passt nicht auf eine Seite</h1>
+  <p>Die {{ anzahl }} ausgewählten Lieder passen auch bei kleinster, noch lesbarer Schrift
+     nicht auf <b>eine</b> A4-Seite (geschätzt <b>{{ pages }} Seiten</b>).</p>
+  <p>Du kannst entweder ein <b>mehrseitiges</b> Sheet erstellen oder zurückgehen und einzelne Lieder entfernen.</p>
+
+  <div class="actions">
+    <form method="post" action="/sheet/erstellen">
+      <input type="hidden" name="ids" value="{{ ids }}">
+      <input type="hidden" name="titel" value="{{ titel }}">
+      <input type="hidden" name="datum" value="{{ datum }}">
+      <input type="hidden" name="mehrseitig" value="1">
+      <button class="btn primary" type="submit">📄 Mehrseitiges Sheet erstellen ({{ pages }} Seiten)</button>
+    </form>
+    <a class="btn" href="/sheet?ids={{ ids }}">Zurück & Lieder entfernen</a>
+  </div>
+</article>
+
+{% endblock %}
