@@ -36,8 +36,13 @@ if ! venv_ok; then
 fi
 
 if [ ! -f data/songs.db ]; then
-  echo "Erstelle eine leere Lieder-Datenbank ..."
-  "$PYBIN" -c "from app.db import init_db; init_db()"
+  if [ -f "Daten zum einlesen/Songtabelle.xlsx" ]; then
+    echo "Baue die Datenbank erstmalig aus den Quelldateien auf ..."
+    "$PYBIN" -m app.build_db
+  else
+    echo "Erstelle eine leere Lieder-Datenbank ..."
+    "$PYBIN" -c "from app.db import init_db; init_db()"
+  fi
 fi
 
 export SINGKREIS_OPEN_BROWSER=1

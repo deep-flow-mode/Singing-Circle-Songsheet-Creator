@@ -35,8 +35,13 @@ if not exist "%PYEXE%" (
 )
 
 if not exist "data\songs.db" (
-  echo Erstelle eine leere Lieder-Datenbank ...
-  "%PYEXE%" -c "from app.db import init_db; init_db()"
+  if exist "Daten zum einlesen\Songtabelle.xlsx" (
+    echo Baue die Datenbank erstmalig aus den Quelldateien auf ...
+    "%PYEXE%" -m app.build_db
+  ) else (
+    echo Erstelle eine leere Lieder-Datenbank ...
+    "%PYEXE%" -c "from app.db import init_db; init_db()"
+  )
 )
 
 set SINGKREIS_OPEN_BROWSER=1

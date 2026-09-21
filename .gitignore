@@ -13,6 +13,9 @@ __pycache__/
 # Generierte QR-Bilder (werden aus den Links in app/config.py neu erzeugt)
 assets/qr/*.png
 
+# Eigene (private) QR-Links – überschreiben die Platzhalter aus app/config.py, gehören nicht ins Repo
+data/qr_links.json
+
 # Generierte Liedzettel (Ausgabe) – der Ordner selbst bleibt via .gitkeep erhalten
 Singkreis Sheets/*.docx
 Singkreis Sheets/*.pdf
