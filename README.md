@@ -72,7 +72,7 @@ Klick auf eine Zeile → ganzer Liedtext.
 2. Unten **„🎵 Singkreis Sheet erstellen"** klicken.
 3. **Reihenfolge** per ↑ ↓ festlegen (✕ entfernt ein Lied), **Überschrift** und **Datum** eingeben.
 4. **„Singkreis Sheet erstellen"** → es entsteht eine **A4-Word-Datei** (2 Spalten, Schrift automatisch so groß wie
-   möglich – 20 bis 17 pt, Ziel 2 Seiten –, Titel + Datum oben, auf Seite 1 unten vier QR-Codes (Instagram · Signal · zwei Telegram-Gruppen) und eine Seitenzahl „Seite X von Y").
+   möglich – 20 bis 17 pt, Ziel 2 Seiten –, Titel + Datum oben, auf Seite 1 unten vier Platzhalter-QR-Codes (siehe „QR-Codes im Fußbereich anpassen“) und eine Seitenzahl „Seite X von Y").
    Reichen selbst bei 17 pt keine 3 Seiten, warnt das Tool vorher und du entscheidest.
 5. Datei **herunterladen** – wahlweise als **Word** oder als **PDF** (der PDF-Export nutzt Microsoft Word und
    ist nur auf dem Mac mit installiertem Word verfügbar). Die Dateien liegen auch im Ordner `Singkreis Sheets/`.
@@ -83,9 +83,7 @@ Klick auf eine Zeile → ganzer Liedtext.
 |-----|--------|
 | `data/songs.db` | die SQLite-Datenbank (deine Lieder) |
 | `Singkreis Sheets/` | erzeugte Liedzettel (.docx) |
-| `Daten zum einlesen/` | Quelldateien des Erst-Imports (`1.docx`…`11.docx` + `Songtabelle.xlsx`) |
-| `berichte/import_report.md` | Bericht zum Erst-Abgleich |
-| `assets/qr/` | QR-Code-Bilder (ändern in `app/config.py` → `QR_LINKS`: Link-Einträge oder fertige SVG-Dateien) |
+| `assets/qr/` | erzeugte QR-Bilder; der Ordner ist nicht im Repo und entsteht beim ersten Sheet (siehe „QR-Codes im Fußbereich anpassen“) |
 | `assets/icon/` | App-Icons (`.icns` für macOS, `.ico` für Windows) – neu erzeugbar mit `scripts/make_icon.py` |
 | `assets/logo/` | dein Logo fürs Kopfband – einfach eine Bilddatei hineinlegen (siehe „Eigenes Logo") |
 | `Singkreis.app` · `start.command` · `start.bat` | Doppelklick-Starter (macOS-App · macOS · Windows) |
@@ -134,6 +132,10 @@ Den **ganzen Projektordner kopieren** (USB-Stick, Cloud …). Wichtig:
 
 ## QR-Codes im Fußbereich anpassen
 
-Auf der ersten Seite jedes Liedzettels stehen unten vier QR-Codes. In dieser Version sind das **Platzhalter**.
+Auf der ersten Seite jedes Liedzettels stehen unten vier QR-Codes. In dieser Version sind das **Platzhalter**: Sie
+zeigen auf `example.com` und führen zu keinem echten Kanal. Beschriftet sind sie mit Instagram, Infos (Signal),
+Infos (Telegram) und Community (Telegram). Die Bilder liegen nicht im Repo, das Tool erzeugt sie beim ersten Sheet in
+`assets/qr/`.
+
 Deine eigenen Links trägst du in [`app/config.py`](app/config.py) unter `QR_LINKS` ein
 (Reihenfolge = links → rechts). Beim nächsten Sheet werden die QR-Bilder automatisch neu erzeugt.
