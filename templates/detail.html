@@ -1,40 +1,40 @@
 {% extends "base.html" %}
-{% block title %}{{ s.liedtitel }} · Singkreis{% endblock %}
+{% block title %}{{ s.liedtitel }} · {{ _("Liederverwaltung") }}{% endblock %}
 {% block content %}
 
-<p class="back"><a href="/">← zurück zur Übersicht</a></p>
+<p class="back"><a href="/">{{ _("← zurück zur Übersicht") }}</a></p>
 
 <article class="single">
   <h1><span class="single-nr">{{ s.liednummer or '—' }}</span> {{ s.liedtitel }}</h1>
 
   {% if s.liedtext %}<pre class="lyrics big">{{ s.liedtext }}</pre>
-  {% else %}<p class="muted">— Noch kein Liedtext — über „Bearbeiten" ergänzen.</p>{% endif %}
+  {% else %}<p class="muted">{{ _("— Noch kein Liedtext — über „Bearbeiten“ ergänzen.") }}</p>{% endif %}
 
   <div class="meta">
-    {% if s.quelle %}<span>📄 Quelle: {{ s.quelle }}</span>{% endif %}
+    {% if s.quelle %}<span>{{ _("📄 Quelle: {quelle}", quelle=s.quelle) }}</span>{% endif %}
     {% if s.notiz %}<span>{{ s.notiz }}</span>{% endif %}
   </div>
 
   <div class="actions">
-    <a class="btn primary" href="/lied/{{ s.id }}/bearbeiten">✏️ Bearbeiten</a>
+    <a class="btn primary" href="/lied/{{ s.id }}/bearbeiten">{{ _("✏️ Bearbeiten") }}</a>
     <form method="post" action="/lied/{{ s.id }}/loeschen"
-          onsubmit="return confirm('Dieses Lied wirklich löschen?');">
-      <button class="btn danger" type="submit">🗑 Löschen</button>
+          onsubmit='return confirm({{ _("Dieses Lied wirklich löschen?")|tojson }});'>
+      <button class="btn danger" type="submit">{{ _("🗑 Löschen") }}</button>
     </form>
   </div>
 </article>
 
 {% if versionen %}
 <section class="versions">
-  <h2 class="versions-h">🕘 Frühere Versionen <span class="vcount">{{ versionen|length }}</span></h2>
-  <p class="versions-hint">Bei jeder Änderung wird der vorherige Stand automatisch gesichert.</p>
+  <h2 class="versions-h">{{ _("🕘 Frühere Versionen") }} <span class="vcount">{{ versionen|length }}</span></h2>
+  <p class="versions-hint">{{ _("Bei jeder Änderung wird der vorherige Stand automatisch gesichert.") }}</p>
   <ul class="vlist">
     {% for v in versionen %}
     <li>
       <a class="vitem" href="/lied/{{ s.id }}/version/{{ v.id }}">
         <span class="vwhen">{{ v.wann }}</span>
-        <span class="vprev">{{ v.vorschau or '— ohne Text —' }}</span>
-        <span class="vgo">ansehen ↗</span>
+        <span class="vprev">{{ v.vorschau or _('— ohne Text —') }}</span>
+        <span class="vgo">{{ _("ansehen ↗") }}</span>
       </a>
     </li>
     {% endfor %}

@@ -1,30 +1,30 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Lied bearbeiten' if s else 'Neues Lied' }} · Singkreis{% endblock %}
+{% block title %}{{ _('Lied bearbeiten') if s else _('Neues Lied') }} · {{ _("Liederverwaltung") }}{% endblock %}
 {% block content %}
 
-<p class="back"><a href="{{ ('/lied/' ~ s.id) if s else '/' }}">← zurück</a></p>
+<p class="back"><a href="{{ ('/lied/' ~ s.id) if s else '/' }}">{{ _("← zurück") }}</a></p>
 
 <article class="single">
-  <h1>{{ 'Lied bearbeiten' if s else 'Neues Lied anlegen' }}</h1>
+  <h1>{{ _('Lied bearbeiten') if s else _('Neues Lied anlegen') }}</h1>
 
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
 
   <form method="post" class="songform">
     <div class="field-row">
-      <label class="small">Liednummer
+      <label class="small">{{ _("Liednummer") }}
         <input name="liednummer" value="{{ s.liednummer if s else (suggested or '') }}"
-               {% if not s %}placeholder="z.B. {{ suggested }}"{% endif %}>
+               {% if not s %}placeholder="{{ _('z. B. {n}', n=suggested) }}"{% endif %}>
       </label>
-      <label class="grow">Titel *
+      <label class="grow">{{ _("Titel *") }}
         <input name="liedtitel" value="{{ s.liedtitel if s else '' }}" required autofocus>
       </label>
     </div>
-    <label>Liedtext
-      <textarea name="liedtext" rows="20" placeholder="Liedtext hier eingeben … (Zeilenumbrüche bleiben erhalten)">{{ s.liedtext if s else '' }}</textarea>
+    <label>{{ _("Liedtext") }}
+      <textarea name="liedtext" rows="20" placeholder="{{ _('Liedtext hier eingeben … (Zeilenumbrüche bleiben erhalten)') }}">{{ s.liedtext if s else '' }}</textarea>
     </label>
     <div class="formbtns">
-      <button class="btn primary" type="submit">Speichern</button>
-      <a class="btn" href="{{ ('/lied/' ~ s.id) if s else '/' }}">Abbrechen</a>
+      <button class="btn primary" type="submit">{{ _("Speichern") }}</button>
+      <a class="btn" href="{{ ('/lied/' ~ s.id) if s else '/' }}">{{ _("Abbrechen") }}</a>
     </div>
   </form>
 </article>

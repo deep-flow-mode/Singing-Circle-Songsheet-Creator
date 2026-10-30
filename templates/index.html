@@ -2,32 +2,32 @@
 {% block content %}
 
 <section class="stats">
-  <div class="stat"><b>{{ stats.total }}</b><span>Lieder</span></div>
-  <div class="stat"><b>{{ stats.mit_text }}</b><span>mit Text</span></div>
-  <div class="stat"><b>{{ stats.ohne_text }}</b><span>ohne Text</span></div>
-  <a class="stat add" href="/neu"><b>+</b><span>Neues Lied</span></a>
+  <div class="stat"><b>{{ stats.total }}</b><span>{{ _("Lieder") }}</span></div>
+  <div class="stat"><b>{{ stats.mit_text }}</b><span>{{ _("mit Text") }}</span></div>
+  <div class="stat"><b>{{ stats.ohne_text }}</b><span>{{ _("ohne Text") }}</span></div>
+  <a class="stat add" href="/neu"><b>+</b><span>{{ _("Neues Lied") }}</span></a>
 </section>
 
 <form class="searchbar" method="get" action="/">
-  <input type="search" name="q" value="{{ q }}" placeholder="Suchen in Titel &amp; Liedtext …" autofocus>
+  <input type="search" name="q" value="{{ q }}" placeholder="{{ _('Suchen in Titel & Liedtext …') }}" autofocus>
   {% if only %}<input type="hidden" name="filter" value="{{ only }}">{% endif %}
-  <button type="submit">Suchen</button>
-  {% if q %}<a class="btn-clear" href="/{% if only %}?filter={{ only }}{% endif %}" title="Suche löschen">×</a>{% endif %}
+  <button type="submit">{{ _("Suchen") }}</button>
+  {% if q %}<a class="btn-clear" href="/{% if only %}?filter={{ only }}{% endif %}" title="{{ _('Suche löschen') }}">×</a>{% endif %}
 </form>
 
 <nav class="filters">
-  <a class="chip {{ 'on' if not only }}" href="/{{ '?q=' ~ q if q }}">Alle</a>
-  <a class="chip {{ 'on' if only=='mit' }}" href="/?filter=mit{{ '&q=' ~ q if q }}">Mit Text</a>
-  <a class="chip {{ 'on' if only=='ohne' }}" href="/?filter=ohne{{ '&q=' ~ q if q }}">Ohne Text</a>
+  <a class="chip {{ 'on' if not only }}" href="/{{ '?q=' ~ q if q }}">{{ _("Alle") }}</a>
+  <a class="chip {{ 'on' if only=='mit' }}" href="/?filter=mit{{ '&q=' ~ q if q }}">{{ _("Mit Text") }}</a>
+  <a class="chip {{ 'on' if only=='ohne' }}" href="/?filter=ohne{{ '&q=' ~ q if q }}">{{ _("Ohne Text") }}</a>
 </nav>
 
-<p class="count">{{ songs|length }} Lieder angezeigt{% if q %} · Suche nach „{{ q }}"{% endif %}
-  <span class="hint">· Lieder anhaken, dann unten „Sheet erstellen"</span></p>
+<p class="count">{{ _("{n} Lieder angezeigt", n=songs|length) }}{% if q %}{{ _(" · Suche nach „{q}“", q=q) }}{% endif %}
+  <span class="hint">{{ _("· Lieder anhaken, dann unten „Sheet erstellen“") }}</span></p>
 
 {% if songs %}
 <table class="songs">
   <thead>
-    <tr><th class="c-sel"></th><th class="c-nr">Nr</th><th class="c-title">Titel</th><th class="c-prev">Vorschau</th></tr>
+    <tr><th class="c-sel"></th><th class="c-nr">{{ _("Nr") }}</th><th class="c-title">{{ _("Titel") }}</th><th class="c-prev">{{ _("Vorschau") }}</th></tr>
   </thead>
   <tbody>
     {% for s in songs %}
@@ -37,18 +37,18 @@
       <td class="c-nr">{{ s.liednummer or '—' }}</td>
       <td class="c-title">
         {{ s.liedtitel }}
-        {% if not s.has_text %}<span class="badge">kein Text</span>{% endif %}
+        {% if not s.has_text %}<span class="badge">{{ _("kein Text") }}</span>{% endif %}
       </td>
       <td class="c-prev">{{ s.vorschau }}</td>
     </tr>
     <tr id="d{{ s.id }}" class="detail" hidden>
       <td colspan="4">
         {% if s.has_text %}<pre class="lyrics">{{ s.liedtext }}</pre>
-        {% else %}<p class="muted">— Noch kein Liedtext —</p>{% endif %}
+        {% else %}<p class="muted">{{ _("— Noch kein Liedtext —") }}</p>{% endif %}
         <div class="meta">
           {% if s.quelle %}<span>📄 {{ s.quelle }}</span>{% endif %}
-          <a href="/lied/{{ s.id }}/bearbeiten">✏️ Bearbeiten</a>
-          <a href="/lied/{{ s.id }}">Einzelansicht ↗</a>
+          <a href="/lied/{{ s.id }}/bearbeiten">{{ _("✏️ Bearbeiten") }}</a>
+          <a href="/lied/{{ s.id }}">{{ _("Einzelansicht ↗") }}</a>
         </div>
       </td>
     </tr>
@@ -56,13 +56,13 @@
   </tbody>
 </table>
 {% else %}
-<p class="empty">Keine Lieder gefunden.</p>
+<p class="empty">{{ _("Keine Lieder gefunden.") }}</p>
 {% endif %}
 
 <div id="actionbar" class="actionbar" style="display:none">
-  <span><b id="selcount">0</b> ausgewählt</span>
-  <button type="button" class="primary" onclick="gotoSheet()">🎵 Singkreis Sheet erstellen</button>
-  <button type="button" class="ghost" onclick="clearSel()">Auswahl leeren</button>
+  <span><b id="selcount">0</b> {{ _("ausgewählt") }}</span>
+  <button type="button" class="primary" onclick="gotoSheet()">{{ _("🎵 Singkreis Sheet erstellen") }}</button>
+  <button type="button" class="ghost" onclick="clearSel()">{{ _("Auswahl leeren") }}</button>
 </div>
 
 {% endblock %}

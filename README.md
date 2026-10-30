@@ -26,7 +26,7 @@ git clone <URL-dieses-Repos>.git
 ## Schnellstart
 
 **macOS – Doppelklick:**
-Doppelklick auf die App **`Singkreis`** (`Singkreis.app`, grünes Noten-Icon) – oder auf **`start.command`**.
+Doppelklick auf die App **`Singkreis`** (`Singkreis.app`, mit dem deep-flow-mode-Logo) – oder auf **`start.command`**.
 Beim ersten Mal richtet sich alles ein (Umgebung + Pakete) und der Browser öffnet automatisch
 `http://127.0.0.1:5001`. Beenden: im Terminalfenster **Strg+C** drücken.
 
@@ -71,9 +71,9 @@ Klick auf eine Zeile → ganzer Liedtext.
 1. In der Übersicht die gewünschten Lieder **anhaken** (die Auswahl bleibt auch beim Suchen erhalten).
 2. Unten **„🎵 Singkreis Sheet erstellen"** klicken.
 3. **Reihenfolge** per ↑ ↓ festlegen (✕ entfernt ein Lied), **Überschrift** und **Datum** eingeben.
-4. **„Singkreis Sheet erstellen"** → es entsteht eine **A4-Word-Datei** (2 Spalten, automatische
-   Schriftgröße, Titel + Datum oben, unten vier QR-Codes (Instagram · Signal · zwei Telegram-Gruppen) und eine Seitenzahl „Seite X von Y").
-   Passt es nicht auf eine Seite, fragt das Tool, ob es mehrseitig werden darf.
+4. **„Singkreis Sheet erstellen"** → es entsteht eine **A4-Word-Datei** (2 Spalten, Schrift automatisch so groß wie
+   möglich – 20 bis 17 pt, Ziel 2 Seiten –, Titel + Datum oben, auf Seite 1 unten vier QR-Codes (Instagram · Signal · zwei Telegram-Gruppen) und eine Seitenzahl „Seite X von Y").
+   Reichen selbst bei 17 pt keine 3 Seiten, warnt das Tool vorher und du entscheidest.
 5. Datei **herunterladen** – wahlweise als **Word** oder als **PDF** (der PDF-Export nutzt Microsoft Word und
    ist nur auf dem Mac mit installiertem Word verfügbar). Die Dateien liegen auch im Ordner `Singkreis Sheets/`.
 
@@ -96,12 +96,20 @@ Klick auf eine Zeile → ganzer Liedtext.
 `liednummer` · `liedtitel` · `liedtext` (mehrzeilig) · `tonart` (in DB, im Tool ausgeblendet) ·
 `quelle` · `status` · `notiz` · Zeitstempel.
 
+## Sprache und Dark Mode
+
+Oben rechts schaltest du die Oberfläche zwischen **Deutsch und Englisch (DE/EN)** um und wechselst per
+Mond/Sonne zwischen **hell und dunkel**. Beides merkt sich der Browser. Solange du nichts gewählt hast, richtet sich
+hell/dunkel nach deinem Betriebssystem. Übersetzt wird nur das Tool – **Liedtitel und Liedtexte bleiben unverändert**.
+Der neue Liedzettel übernimmt die eingestellte Sprache bei Seitenzahl und Datum.
+
 ## Eigenes Logo im Kopfband
 
-Oben im Tool steht **„Liederverwaltung von"** und daneben dein Logo.
+Oben links im Tool steht dein Logo und daneben die Überschrift **„Liederverwaltung"**.
 
 - **Logo einsetzen/ändern:** eine Bilddatei (PNG/JPG/SVG …) in den Ordner **`assets/logo/`** legen
   (per Finder hineinziehen). Die **zuletzt hineingelegte** Datei wird verwendet – Name/Format egal.
+  Eine zweite Datei namens `<name>-dark.<endung>` wird im Dark Mode gezeigt.
   **Weiße (oder transparente) Ränder werden automatisch weggeschnitten** – du musst nichts zuschneiden.
   Danach Browser-Seite neu laden (das Tool muss nicht neu starten).
 - **Kein Logo vorhanden?** Dann zeigt das Kopfband den Schriftzug **deep · flow · mode** in den drei Markenfarben.
@@ -126,6 +134,6 @@ Den **ganzen Projektordner kopieren** (USB-Stick, Cloud …). Wichtig:
 
 ## QR-Codes im Fußbereich anpassen
 
-Auf jedem Liedzettel stehen unten vier QR-Codes. In dieser Version sind das **Platzhalter**.
+Auf der ersten Seite jedes Liedzettels stehen unten vier QR-Codes. In dieser Version sind das **Platzhalter**.
 Deine eigenen Links trägst du in [`app/config.py`](app/config.py) unter `QR_LINKS` ein
 (Reihenfolge = links → rechts). Beim nächsten Sheet werden die QR-Bilder automatisch neu erzeugt.

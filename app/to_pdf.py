@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 from .config import BASE_DIR
+from .i18n import _
 
 WORD_APP = Path("/Applications/Microsoft Word.app")
 _SCRIPT = BASE_DIR / "scripts" / "docx_to_pdf.applescript"
@@ -39,18 +40,18 @@ def docx_to_pdf(docx_path) -> Path:
     docx_path = Path(docx_path)
     pdf_path = docx_path.with_suffix(".pdf")
     if not pdf_export_available():
-        raise PdfExportError("PDF-Export benötigt Microsoft Word auf macOS.")
+        raise PdfExportError(_("PDF-Export benötigt Microsoft Word auf macOS."))
     try:
         res = subprocess.run(
             ["osascript", str(_SCRIPT), str(docx_path), str(pdf_path)],
             capture_output=True, text=True, timeout=90,
         )
     except subprocess.TimeoutExpired as exc:
-        raise PdfExportError("Word hat zu lange gebraucht (Zeitüberschreitung).") from exc
+        raise PdfExportError(_("Word hat zu lange gebraucht (Zeitüberschreitung).")) from exc
     if res.returncode != 0 or not pdf_path.exists():
         detail = (res.stderr or "").strip()
         raise PdfExportError(
-            "Die Konvertierung ist fehlgeschlagen. Erlaubt macOS dem Tool, "
-            "Microsoft Word zu steuern?" + (f"\n\n{detail}" if detail else "")
+            _("Die Konvertierung ist fehlgeschlagen. Erlaubt macOS dem Tool, Microsoft Word zu steuern?")
+            + (f"\n\n{detail}" if detail else "")
         )
     return pdf_path

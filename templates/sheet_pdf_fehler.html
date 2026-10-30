@@ -1,14 +1,13 @@
 {% extends "base.html" %}
-{% block title %}PDF-Export{% endblock %}
+{% block title %}{{ _("PDF-Export") }}{% endblock %}
 {% block content %}
 
 <article class="single">
-  <h1>PDF konnte nicht erstellt werden</h1>
+  <h1>{{ _("PDF konnte nicht erstellt werden") }}</h1>
   <p>{{ meldung }}</p>
-  <p class="hint">Beim ersten Mal fragt macOS, ob das Tool „Microsoft Word" steuern darf – bitte einmal erlauben.
-     Alternativ die Word-Datei öffnen und dort als PDF speichern.</p>
+  <p class="hint">{{ _("Beim ersten Mal fragt macOS, ob das Tool „Microsoft Word“ steuern darf – bitte einmal erlauben. Alternativ die Word-Datei öffnen und dort als PDF speichern.") }}</p>
   <div class="actions">
-    <a class="btn" href="/">Zur Übersicht</a>
+    <a class="btn" href="/">{{ _("Zur Übersicht") }}</a>
   </div>
 </article>
 

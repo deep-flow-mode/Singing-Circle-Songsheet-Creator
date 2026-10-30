@@ -1,30 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Sheet erstellt{% endblock %}
+{% block title %}{{ _("Sheet erstellt") }}{% endblock %}
 {% block content %}
 
 <article class="single">
-  <h1>✅ Sheet erstellt</h1>
-  <p>„<b>{{ titel }}</b>"{% if datum %} · {{ datum }}{% endif %} mit <b>{{ anzahl }}</b> Liedern.</p>
-  <p class="muted">Schriftgröße {{ font }} pt · {{ pages }} Seite(n) · gespeichert im Ordner
-     <code>Singkreis Sheets/</code> als <code>{{ filename }}</code></p>
+  <h1>{{ _("✅ Sheet erstellt") }}</h1>
+  <p><b>{{ titel }}</b>{% if datum %} · {{ datum }}{% endif %} {{ _("mit <b>{n}</b> Liedern.", n=anzahl|e)|safe }}</p>
+  <p class="muted">{{ _("Schriftgröße {font} pt · {pages} Seite(n) · gespeichert im Ordner", font=font, pages=pages) }}
+     <code>Singkreis Sheets/</code> {{ _("als") }} <code>{{ filename }}</code></p>
 
   <div class="actions">
-    <a class="btn primary" href="/sheet/download/{{ filename }}">⬇️ Word herunterladen</a>
+    <a class="btn primary" href="/sheet/download/{{ filename }}">{{ _("⬇️ Word herunterladen") }}</a>
     {% if pdf_available %}
-    <a class="btn primary" id="pdfbtn" href="/sheet/pdf/{{ filename }}" onclick="pdfWait()">⬇️ PDF herunterladen</a>
+    <a class="btn primary" id="pdfbtn" href="/sheet/pdf/{{ filename }}" onclick="pdfWait()">{{ _("⬇️ PDF herunterladen") }}</a>
     {% endif %}
-    <a class="btn" href="/">Zur Übersicht</a>
+    <a class="btn" href="/">{{ _("Zur Übersicht") }}</a>
   </div>
 
   {% if pdf_available %}
-  <p id="pdfhint" class="hint" style="margin-top:16px; display:none">⏳ PDF wird erstellt – Word öffnet sich dafür kurz im Hintergrund. Einen Moment bitte…</p>
+  <p id="pdfhint" class="hint" style="margin-top:16px; display:none">{{ _("⏳ PDF wird erstellt – Word öffnet sich dafür kurz im Hintergrund. Einen Moment bitte…") }}</p>
   {% else %}
-  <p class="hint" style="margin-top:16px">Ein PDF-Export ist hier nicht verfügbar (dafür wird Microsoft Word auf macOS benötigt).
-     Die Word-Datei lässt sich in Word oder Pages öffnen und dort als PDF speichern.</p>
+  <p class="hint" style="margin-top:16px">{{ _("Ein PDF-Export ist hier nicht verfügbar (dafür wird Microsoft Word auf macOS benötigt). Die Word-Datei lässt sich in Word oder Pages öffnen und dort als PDF speichern.") }}</p>
   {% endif %}
 
-  <p class="hint" style="margin-top:16px">Tipp: Datei in Word/Pages öffnen, prüfen und drucken.
-     Der Bereich für die QR-Codes ist unten schon freigehalten.</p>
+  <p class="hint" style="margin-top:16px">{{ _("Tipp: Datei in Word/Pages öffnen, prüfen und drucken.") }}</p>
 </article>
 
 {% endblock %}

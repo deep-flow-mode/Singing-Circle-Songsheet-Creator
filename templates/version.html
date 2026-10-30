@@ -1,44 +1,43 @@
 {% extends "base.html" %}
-{% block title %}Frühere Version · {{ v.liedtitel }} · Singkreis{% endblock %}
+{% block title %}{{ _("Frühere Version") }} · {{ v.liedtitel }} · {{ _("Liederverwaltung") }}{% endblock %}
 {% block content %}
 
-<p class="back"><a href="/lied/{{ s.id }}">← zurück zum Lied „{{ s.liedtitel }}"</a></p>
+<p class="back"><a href="/lied/{{ s.id }}">{{ _("← zurück zum Lied „{titel}“", titel=s.liedtitel) }}</a></p>
 
 <div class="version-banner">
-  🕘 Frühere Version – gesichert am <b>{{ v.wann }}</b>.
-  Du kannst sie ansehen, mit dem aktuellen Stand vergleichen oder wiederherstellen.
+  {{ _("🕘 Frühere Version – gesichert am <b>{wann}</b>. Du kannst sie ansehen, mit dem aktuellen Stand vergleichen oder wiederherstellen.", wann=v.wann)|safe }}
 </div>
 
 <article class="single">
   <h1><span class="single-nr">{{ v.liednummer or '—' }}</span> {{ v.liedtitel }}</h1>
 
   {% if v.liedtext %}<pre class="lyrics big">{{ v.liedtext }}</pre>
-  {% else %}<p class="muted">— Diese Fassung hatte keinen Liedtext —</p>{% endif %}
+  {% else %}<p class="muted">{{ _("— Diese Fassung hatte keinen Liedtext —") }}</p>{% endif %}
 
   <div class="actions">
     {% if vergleich %}
-      <a class="btn" href="/lied/{{ s.id }}/version/{{ v.id }}">Vergleich ausblenden</a>
+      <a class="btn" href="/lied/{{ s.id }}/version/{{ v.id }}">{{ _("Vergleich ausblenden") }}</a>
     {% else %}
-      <a class="btn" href="/lied/{{ s.id }}/version/{{ v.id }}?vergleich=1">🔍 Mit aktueller Fassung vergleichen</a>
+      <a class="btn" href="/lied/{{ s.id }}/version/{{ v.id }}?vergleich=1">{{ _("🔍 Mit aktueller Fassung vergleichen") }}</a>
     {% endif %}
     <form method="post" action="/lied/{{ s.id }}/version/{{ v.id }}/wiederherstellen"
-          onsubmit="return confirm('Diese frühere Fassung wiederherstellen?\n\nDer aktuelle Stand wird dabei automatisch als Version gesichert – du kannst also nichts verlieren.');">
-      <button class="btn primary" type="submit">↩️ Diese Version wiederherstellen</button>
+          onsubmit='return confirm({{ _("Diese frühere Fassung wiederherstellen?\n\nDer aktuelle Stand wird dabei automatisch als Version gesichert – du kannst also nichts verlieren.")|tojson }});'>
+      <button class="btn primary" type="submit">{{ _("↩️ Diese Version wiederherstellen") }}</button>
     </form>
-    <a class="btn" href="/lied/{{ s.id }}">← zurück zum aktuellen Stand</a>
+    <a class="btn" href="/lied/{{ s.id }}">{{ _("← zurück zum aktuellen Stand") }}</a>
   </div>
 </article>
 
 {% if vergleich %}
 <section class="versions">
-  <h2 class="versions-h">🔍 Vergleich: diese Version → aktueller Stand</h2>
+  <h2 class="versions-h">{{ _("🔍 Vergleich: diese Version → aktueller Stand") }}</h2>
   <p class="versions-hint">
-    <span class="diff-key weg">− entfernt</span>
-    <span class="diff-key neu">+ hinzugekommen</span>
-    gegenüber dieser alten Fassung.
+    <span class="diff-key weg">{{ _("− entfernt") }}</span>
+    <span class="diff-key neu">{{ _("+ hinzugekommen") }}</span>
+    {{ _("gegenüber dieser alten Fassung.") }}
   </p>
   {% if gleich %}
-    <p class="muted">Kein Unterschied – diese Fassung ist identisch mit dem aktuellen Stand.</p>
+    <p class="muted">{{ _("Kein Unterschied – diese Fassung ist identisch mit dem aktuellen Stand.") }}</p>
   {% else %}
   <pre class="diff">{% for typ, zeile in diff %}<span class="d-{{ typ }}">{{ {'gleich':' ','weg':'−','neu':'+'}[typ] }} {{ zeile }}</span>{% endfor %}</pre>
   {% endif %}

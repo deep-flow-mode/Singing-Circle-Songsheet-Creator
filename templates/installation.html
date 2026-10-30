@@ -1,59 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Installation für Einsteiger · Singkreis{% endblock %}
+{% block title %}{{ _("Installation für Einsteiger") }}{% endblock %}
 {% block content %}
 <style>
   .guide{max-width:840px;margin:0 auto}
-  .guide .lead{color:#555;font-size:1.05rem;margin:.3rem 0 1.5rem;line-height:1.5}
-  .guide .req{display:flex;gap:16px;align-items:center;background:#fffdf5;border:1px solid #e9dca8;
-    border-left:5px solid #e3a52a;border-radius:12px;padding:16px 18px;margin:0 0 1.6rem}
+  .guide .lead{color:var(--muted);font-size:1.05rem;margin:.3rem 0 1.5rem;line-height:1.5}
+  .guide .req{display:flex;gap:16px;align-items:center;background:var(--warn-bg);border:1px solid var(--warn-line);
+    border-left:5px solid var(--gold);border-radius:12px;padding:16px 18px;margin:0 0 1.6rem}
   .guide .req svg{width:46px;height:46px;flex:0 0 auto}
-  .guide .req h3{margin:0 0 .25rem;color:#22384f}
-  .guide .req p{margin:0;color:#444;font-size:.95rem;line-height:1.45}
-  .guide .btn-ext{display:inline-block;margin-top:.55rem;background:#22384f;color:#fff;text-decoration:none;
+  .guide .req h3{margin:0 0 .25rem;color:var(--heading)}
+  .guide .req p{margin:0;color:var(--ink);font-size:.95rem;line-height:1.45}
+  .guide .btn-ext{display:inline-block;margin-top:.55rem;background:var(--accent);color:#fff;text-decoration:none;
     padding:.42rem .85rem;border-radius:8px;font-size:.9rem;font-weight:600}
   .guide ol.steps{list-style:none;counter-reset:s;padding:0;margin:0}
-  .guide ol.steps>li{position:relative;counter-increment:s;background:#fff;border:1px solid #e6e6ea;
-    border-radius:14px;padding:18px 20px 18px 68px;margin:0 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .guide ol.steps>li{position:relative;counter-increment:s;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px 20px 18px 68px;margin:0 0 14px;box-shadow:var(--shadow)}
   .guide ol.steps>li::before{content:counter(s);position:absolute;left:18px;top:18px;width:34px;height:34px;
-    border-radius:50%;background:#22384f;color:#fff;font-weight:700;font-size:1.05rem;
+    border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:1.05rem;
     display:flex;align-items:center;justify-content:center}
-  .guide ol.steps h3{margin:.15rem 0 .5rem;color:#22384f;display:flex;align-items:center;gap:10px;font-size:1.08rem}
+  .guide ol.steps h3{margin:.15rem 0 .5rem;color:var(--heading);display:flex;align-items:center;gap:10px;font-size:1.08rem}
   .guide ol.steps h3 svg{width:26px;height:26px;flex:0 0 auto}
-  .guide ol.steps p{margin:.35rem 0;color:#333;line-height:1.55}
-  .guide .pill{display:inline-block;background:#eef1f5;border-radius:6px;padding:.05rem .4rem;
+  .guide ol.steps p{margin:.35rem 0;color:var(--ink);line-height:1.55}
+  .guide .pill{display:inline-block;background:var(--surface);border-radius:6px;padding:.05rem .4rem;
     font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
-  .guide .tip{background:#f4f8f4;border-left:5px solid #3c7a4a;border-radius:10px;padding:10px 14px;margin:.6rem 0;font-size:.93rem}
+  .guide .tip{background:var(--tip-bg);border-left:5px solid var(--tip-line);border-radius:10px;padding:10px 14px;margin:.6rem 0;font-size:.93rem}
+  .guide .note{color:var(--muted)}
   .guide .two{display:flex;gap:14px;flex-wrap:wrap;margin:.6rem 0 .2rem}
-  .guide .two>div{flex:1 1 250px;border:1px dashed #cfd6de;border-radius:10px;padding:12px 14px}
-  .guide .two h4{margin:.1rem 0 .35rem;color:#22384f;font-size:.98rem}
+  .guide .two>div{flex:1 1 250px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px}
+  .guide .two h4{margin:.1rem 0 .35rem;color:var(--heading);font-size:.98rem}
   .guide .two p{margin:0;font-size:.92rem}
-  .guide .done{background:#22384f;color:#fff;border-radius:14px;padding:18px 22px;margin:8px 0 0}
+  .guide .done{background:var(--navy);color:#fff;border-radius:14px;padding:18px 22px;margin:8px 0 0}
   .guide .done h3{margin:0 0 .3rem;color:#fff}
   .guide .done p{margin:.2rem 0;line-height:1.55}
   .guide .done code{background:rgba(255,255,255,.16);color:#fff;padding:.05rem .35rem;border-radius:5px}
-  .guide .win{margin-top:1.5rem;border:1px solid #e6e6ea;border-radius:12px;padding:14px 18px;background:#fafafb}
-  .guide .win h3{margin:.1rem 0 .4rem;color:#22384f;font-size:1.02rem}
-  .guide .win p{margin:.2rem 0;color:#333;line-height:1.5}
+  .guide .win{margin-top:1.5rem;border:1px solid var(--line);border-radius:12px;padding:14px 18px;background:var(--detail)}
+  .guide .win h3{margin:.1rem 0 .4rem;color:var(--heading);font-size:1.02rem}
+  .guide .win p{margin:.2rem 0;color:var(--ink);line-height:1.5}
 </style>
 
-<p class="back"><a href="/">← zurück zur Übersicht</a></p>
+<p class="back"><a href="/">{{ _("← zurück zur Übersicht") }}</a></p>
 
 <div class="guide">
-  <h1 class="page-h1">🎵 Installation für Einsteiger</h1>
-  <p class="lead">In wenigen Schritten läuft das Singkreis-Tool auf deinem Mac – ganz ohne Vorkenntnisse.
-     Nimm dir etwa 5 Minuten Zeit und folge einfach den Schritten der Reihe nach.</p>
+  <h1 class="page-h1">{{ _("🎵 Installation für Einsteiger") }}</h1>
+  <p class="lead">{{ _("In wenigen Schritten läuft das Singkreis-Tool auf deinem Mac – ganz ohne Vorkenntnisse. Nimm dir etwa 5 Minuten Zeit und folge einfach den Schritten der Reihe nach.") }}</p>
 
   <div class="req">
-    <svg viewBox="0 0 64 64" role="img" aria-label="Python-Logo">
+    <svg viewBox="0 0 64 64" role="img" aria-label="Python">
       <path fill="#3776AB" d="M32 6c-9 0-9 4-9 4v6h9v2H14c0 0-6 0-6 9s6 9 6 9h4v-5c0 0 0-5 5-5h9c0 0 5 0 5-5V10c0 0 1-4-9-4z"/>
       <circle cx="20.5" cy="11.2" r="2.3" fill="#fff"/>
       <path fill="#FFD43B" transform="rotate(180 32 32)" d="M32 6c-9 0-9 4-9 4v6h9v2H14c0 0-6 0-6 9s6 9 6 9h4v-5c0 0 0-5 5-5h9c0 0 5 0 5-5V10c0 0 1-4-9-4z"/>
       <circle cx="43.5" cy="52.8" r="2.3" fill="#fff"/>
     </svg>
     <div>
-      <h3>Voraussetzung: Python 3</h3>
-      <p>Das Tool benötigt einmalig „Python 3" auf dem Rechner. Auf vielen Macs ist es schon vorhanden –
-         falls nicht, lädst du es hier kostenlos herunter:</p>
+      <h3>{{ _("Voraussetzung: Python 3") }}</h3>
+      <p>{{ _("Das Tool benötigt einmalig „Python 3“ auf dem Rechner. Auf vielen Macs ist es schon vorhanden – falls nicht, lädst du es hier kostenlos herunter:") }}</p>
       <a class="btn-ext" href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads →</a>
     </div>
   </div>
@@ -67,71 +66,61 @@
           <path fill="#FFD43B" transform="rotate(180 32 32)" d="M32 6c-9 0-9 4-9 4v6h9v2H14c0 0-6 0-6 9s6 9 6 9h4v-5c0 0 0-5 5-5h9c0 0 5 0 5-5V10c0 0 1-4-9-4z"/>
           <circle cx="43.5" cy="52.8" r="2.3" fill="#fff"/>
         </svg>
-        Python 3 sicherstellen
+        {{ _("Python 3 sicherstellen") }}
       </h3>
-      <p>Falls noch nicht vorhanden: die oben verlinkte Seite öffnen, den großen Knopf <b>„Download Python"</b>
-         klicken und den Installer ausführen (einfach durchklicken). Das war's – melden musst du dich nirgends.</p>
+      <p>{{ _("Falls noch nicht vorhanden: die oben verlinkte Seite öffnen, den großen Knopf <b>„Download Python“</b> klicken und den Installer ausführen (einfach durchklicken). Das war's – melden musst du dich nirgends.")|safe }}</p>
     </li>
 
     <li>
       <h3>
         <svg viewBox="0 0 16 16" role="img" aria-label="GitHub">
-          <path fill="#181717" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
         </svg>
-        Tool von GitHub herunterladen
+        {{ _("Tool von GitHub herunterladen") }}
       </h3>
-      <p>Auf der GitHub-Seite des Tools den grünen Knopf <span class="pill">Code</span> anklicken – dann hast du zwei Wege:</p>
+      <p>{{ _("Auf der GitHub-Seite des Tools den grünen Knopf <span class=\"pill\">Code</span> anklicken – dann hast du zwei Wege:")|safe }}</p>
       <div class="two">
         <div>
-          <h4>Einfachster Weg</h4>
-          <p><span class="pill">Download ZIP</span> wählen. Die Datei landet im Ordner „Downloads".</p>
+          <h4>{{ _("Einfachster Weg") }}</h4>
+          <p>{{ _("<span class=\"pill\">Download ZIP</span> wählen. Die Datei landet im Ordner „Downloads“.")|safe }}</p>
         </div>
         <div>
-          <h4>Noch reibungsloser</h4>
-          <p>Mit der Gratis-App <b>GitHub Desktop</b> auf <b>„Clone"</b> – dann erscheint <b>keine</b>
-             Sicherheitsmeldung, und Schritt 5 entfällt.</p>
+          <h4>{{ _("Noch reibungsloser") }}</h4>
+          <p>{{ _("Mit der Gratis-App <b>GitHub Desktop</b> auf <b>„Clone“</b> – dann erscheint <b>keine</b> Sicherheitsmeldung, und Schritt 5 entfällt.")|safe }}</p>
         </div>
       </div>
     </li>
 
     <li>
-      <h3>Ordner entpacken</h3>
-      <p>Die heruntergeladene ZIP-Datei per <b>Doppelklick</b> entpacken. Es entsteht ein Ordner mit dem Tool.
-         <span style="color:#666">(Wenn du „Clone" genutzt hast, ist der Ordner schon fertig – überspringe diesen Schritt.)</span></p>
+      <h3>{{ _("Ordner entpacken") }}</h3>
+      <p>{{ _("Die heruntergeladene ZIP-Datei per <b>Doppelklick</b> entpacken. Es entsteht ein Ordner mit dem Tool.")|safe }}
+         <span class="note">{{ _("(Wenn du „Clone“ genutzt hast, ist der Ordner schon fertig – überspringe diesen Schritt.)") }}</span></p>
     </li>
 
     <li>
-      <h3>Tool starten</h3>
-      <p>Den Ordner öffnen und <b>Doppelklick</b> auf die App <span class="pill">Singkreis</span>
-         (grünes Noten-Symbol) – alternativ auf <span class="pill">start.command</span>.</p>
-      <div class="tip">Beim <b>ersten</b> Start richtet sich alles automatisch ein (kurz Internet nötig, ca. 1 Minute).
-        Bitte einfach warten und nicht abbrechen.</div>
+      <h3>{{ _("Tool starten") }}</h3>
+      <p>{{ _("Den Ordner öffnen und <b>Doppelklick</b> auf die App <span class=\"pill\">Singkreis</span> (mit dem Logo als Symbol) – alternativ auf <span class=\"pill\">start.command</span>.")|safe }}</p>
+      <div class="tip">{{ _("Beim <b>ersten</b> Start richtet sich alles automatisch ein (kurz Internet nötig, ca. 1 Minute). Bitte einfach warten und nicht abbrechen.")|safe }}</div>
     </li>
 
     <li>
-      <h3>🔒 macOS-Sicherheitsmeldung freigeben</h3>
-      <p>Erscheint „<i>… kann nicht auf Schadsoftware geprüft werden</i>"? Das ist <b>normal</b>
-         (das Tool ist nur nicht von Apple signiert) – <b>keine</b> echte Schadsoftware. So gibst du es <b>einmalig</b> frei:</p>
-      <p>1. Die Meldung mit <b>„Fertig"</b> schließen.<br>
-         2. <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b> öffnen, ganz nach unten scrollen →
-            beim Hinweis auf „Singkreis" den Knopf <b>„Dennoch öffnen"</b> anklicken und bestätigen.<br>
-         3. Die App noch einmal doppelklicken → jetzt startet sie.</p>
-      <div class="tip">Ab jetzt merkt sich der Mac das – weitere Starts laufen <b>ohne</b> Nachfrage.
-        <span style="color:#666">(Ältere macOS: einfach <b>Rechtsklick</b> auf die App → „Öffnen".)</span></div>
+      <h3>{{ _("🔒 macOS-Sicherheitsmeldung freigeben") }}</h3>
+      <p>{{ _("Erscheint „<i>… kann nicht auf Schadsoftware geprüft werden</i>“? Das ist <b>normal</b> (das Tool ist nur nicht von Apple signiert) – <b>keine</b> echte Schadsoftware. So gibst du es <b>einmalig</b> frei:")|safe }}</p>
+      <p>{{ _("1. Die Meldung mit <b>„Fertig“</b> schließen.<br>2. <b>Systemeinstellungen → Datenschutz &amp; Sicherheit</b> öffnen, ganz nach unten scrollen → beim Hinweis auf „Singkreis“ den Knopf <b>„Dennoch öffnen“</b> anklicken und bestätigen.<br>3. Die App noch einmal doppelklicken → jetzt startet sie.")|safe }}</p>
+      <div class="tip">{{ _("Ab jetzt merkt sich der Mac das – weitere Starts laufen <b>ohne</b> Nachfrage.")|safe }}
+        <span class="note">{{ _("(Ältere macOS: einfach <b>Rechtsklick</b> auf die App → „Öffnen“.)")|safe }}</span></div>
     </li>
   </ol>
 
   <div class="done">
-    <h3>✅ Fertig!</h3>
-    <p>Der Browser öffnet sich automatisch mit dem Tool unter <code>http://127.0.0.1:5001</code>.</p>
-    <p>Zum <b>Beenden</b>: im schwarzen Terminal-Fenster <b>Strg&nbsp;+&nbsp;C</b> drücken.</p>
+    <h3>{{ _("✅ Fertig!") }}</h3>
+    <p>{{ _("Der Browser öffnet sich automatisch mit dem Tool unter <code>http://127.0.0.1:5001</code>.")|safe }}</p>
+    <p>{{ _("Zum <b>Beenden</b>: im schwarzen Terminal-Fenster <b>Strg&nbsp;+&nbsp;C</b> drücken.")|safe }}</p>
   </div>
 
   <div class="win">
-    <h3>Windows statt Mac?</h3>
-    <p>Fast gleich: ZIP entpacken, dann <span class="pill">start.bat</span> doppelklicken. Meldet Windows
-       „Der Computer wurde durch Windows geschützt", auf <b>„Weitere Informationen" → „Trotzdem ausführen"</b> klicken.
-       Voraussetzung ist ebenfalls <b>Python 3</b> – bei dessen Installation unbedingt <b>„Add Python to PATH"</b> anhaken.</p>
+    <h3>{{ _("Windows statt Mac?") }}</h3>
+    <p>{{ _("Fast gleich: ZIP entpacken, dann <span class=\"pill\">start.bat</span> doppelklicken. Meldet Windows „Der Computer wurde durch Windows geschützt“, auf <b>„Weitere Informationen“ → „Trotzdem ausführen“</b> klicken. Voraussetzung ist ebenfalls <b>Python 3</b> – bei dessen Installation unbedingt <b>„Add Python to PATH“</b> anhaken.")|safe }}</p>
   </div>
 </div>
 {% endblock %}

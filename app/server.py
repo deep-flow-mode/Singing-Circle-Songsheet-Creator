@@ -2,13 +2,15 @@
 import difflib
 import io
 from datetime import date, datetime
+from urllib.parse import urlparse
 
 from flask import (Flask, Response, abort, redirect, render_template, request,
                    send_file, url_for)
 
 from . import db
 from .config import BASE_DIR, DB_PATH, SHEETS_DIR
-from .export_sheet import NeedsMultipage, create_sheet
+from .export_sheet import MAX_PAGES, MIN_FONT, NeedsMultipage, create_sheet
+from .i18n import LANGS, _, current_lang
 from .to_pdf import PdfExportError, docx_to_pdf, pdf_export_available
 
 
@@ -24,7 +26,8 @@ def _fmt_dt(s: str) -> str:
     if not s:
         return ""
     try:
-        return datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S").strftime("%d.%m.%Y, %H:%M")
+        fmt = "%d %b %Y, %H:%M" if current_lang() == "en" else "%d.%m.%Y, %H:%M"
+        return datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S").strftime(fmt)
     except ValueError:
         return s
 
@@ -71,13 +74,15 @@ def _load_ordered(ids):
 LOGO_EXT = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif")
 
 
-def _find_logo():
+def _find_logo(dark: bool = False):
     """Zuletzt abgelegte Bilddatei in assets/logo/ (Dateiname/Format egal) –
-    so 'gewinnt' eine neu hineingezogene Logo-Datei automatisch."""
+    so 'gewinnt' eine neu hineingezogene Logo-Datei automatisch.
+    Eine Datei "<name>-dark.<endung>" ist die Variante für den Dark Mode."""
     d = BASE_DIR / "assets" / "logo"
     if d.is_dir():
         imgs = [p for p in d.iterdir()
-                if p.is_file() and p.suffix.lower() in LOGO_EXT and not p.name.startswith(".")]
+                if p.is_file() and p.suffix.lower() in LOGO_EXT and not p.name.startswith(".")
+                and p.stem.endswith("-dark") == dark]
         if imgs:
             return max(imgs, key=lambda p: p.stat().st_mtime)
     return None
@@ -122,7 +127,10 @@ def create_app() -> Flask:
 
     @app.context_processor
     def _globals():
-        return {"db_name": DB_PATH.name, "has_logo": _find_logo() is not None}
+        theme = request.cookies.get("theme")
+        return {"db_name": DB_PATH.name, "has_logo": _find_logo() is not None,
+                "has_dark_logo": _find_logo(dark=True) is not None, "_": _,
+                "lang": current_lang(), "theme": theme if theme in ("light", "dark") else None}
 
     @app.after_request
     def _no_cache(resp):
@@ -131,9 +139,21 @@ def create_app() -> Flask:
         resp.headers["Cache-Control"] = "no-store"
         return resp
 
+    @app.route("/sprache/<code>")
+    def sprache(code):
+        if code not in LANGS:
+            abort(404)
+        ziel = request.referrer or "/"
+        if urlparse(ziel).netloc != request.host:
+            ziel = "/"
+        resp = redirect(ziel)
+        resp.set_cookie("lang", code, max_age=365 * 24 * 3600, samesite="Lax")
+        return resp
+
     @app.route("/logo")
-    def logo():
-        p = _find_logo()
+    @app.route("/logo/dark", endpoint="logo_dark", defaults={"dark": True})
+    def logo(dark=False):
+        p = _find_logo(dark)
         if not p:
             abort(404)
         key, mtime = str(p), p.stat().st_mtime
@@ -234,7 +254,7 @@ def create_app() -> Flask:
                 if not titel:
                     return render_template("form.html", s=None,
                                            suggested=nr or db.next_free_number(conn),
-                                           error="Bitte einen Titel eingeben.")
+                                           error=_("Bitte einen Titel eingeben."))
                 new_id = db.insert_song(
                     conn, liednummer=nr, liedtitel=titel, liedtext=text,
                     quelle="manuell",
@@ -260,7 +280,7 @@ def create_app() -> Flask:
                 text = request.form.get("liedtext", "")
                 if not titel:
                     return render_template("form.html", s=dict(row),
-                                           error="Bitte einen Titel eingeben.")
+                                           error=_("Bitte einen Titel eingeben."))
                 db.update_song(conn, song_id, liednummer=nr,
                                liedtitel=titel, liedtext=text)
                 conn.commit()
@@ -301,12 +321,26 @@ def create_app() -> Flask:
         try:
             path, font, pages = create_sheet(songs, titel, datum, allow_multipage=allow)
         except NeedsMultipage as e:
-            return render_template("sheet_confirm.html", titel=titel, datum=datum,
-                                   ids=",".join(str(i) for i in ids),
-                                   pages=e.pages, anzahl=len(songs))
-        return render_template("sheet_fertig.html", filename=path.name, titel=titel,
-                               datum=datum, font=font, pages=pages, anzahl=len(songs),
-                               pdf_available=pdf_export_available())
+            return redirect(url_for("sheet_warnung", titel=titel, datum=datum,
+                                    ids=",".join(str(i) for i in ids),
+                                    pages=e.pages, anzahl=len(songs)))
+        # Weiterleitung: Neu laden oder Sprache wechseln erzeugt so kein zweites Sheet
+        return redirect(url_for("sheet_fertig", filename=path.name, titel=titel, datum=datum,
+                                font=font, pages=pages, anzahl=len(songs)))
+
+    @app.route("/sheet/warnung")
+    def sheet_warnung():
+        a = request.args
+        return render_template("sheet_confirm.html", titel=a.get("titel", ""), datum=a.get("datum", ""),
+                               ids=a.get("ids", ""), pages=a.get("pages", ""), anzahl=a.get("anzahl", ""),
+                               min_font=MIN_FONT, max_pages=MAX_PAGES)
+
+    @app.route("/sheet/fertig")
+    def sheet_fertig():
+        a = request.args
+        return render_template("sheet_fertig.html", filename=a.get("filename", ""), titel=a.get("titel", ""),
+                               datum=a.get("datum", ""), font=a.get("font", ""), pages=a.get("pages", ""),
+                               anzahl=a.get("anzahl", ""), pdf_available=pdf_export_available())
 
     @app.route("/sheet/download/<path:filename>")
     def sheet_download(filename):

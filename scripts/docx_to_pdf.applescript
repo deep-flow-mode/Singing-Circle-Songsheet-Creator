@@ -9,18 +9,21 @@ on run argv
 	set inPath to item 1 of argv
 	set outPath to item 2 of argv
 	set outHFS to (POSIX file outPath) as text
+	set docName to do shell script "basename " & quoted form of inPath
 	do shell script "open -a 'Microsoft Word' " & quoted form of inPath
 	tell application "Microsoft Word"
-		-- bis zu ~20 s auf das geöffnete Dokument warten (kalter Word-Start)
-		set d to missing value
+		-- bis zu ~20 s auf genau DIESES Dokument warten (kalter Word-Start). Nicht "active
+		-- document" nehmen: Das kann ein anderes offenes Dokument sein -> PDF vom falschen Zettel.
+		set docOpen to false
 		repeat 40 times
-			if (count of documents) > 0 then
-				set d to active document
+			if (name of every document) contains docName then
+				set docOpen to true
 				exit repeat
 			end if
 			delay 0.5
 		end repeat
-		if d is missing value then error "Word hat das Dokument nicht geöffnet."
+		if not docOpen then error "Word hat das Dokument nicht geöffnet."
+		set d to document docName
 		save as d file name outHFS file format format PDF
 		delay 0.3
 		close d saving no

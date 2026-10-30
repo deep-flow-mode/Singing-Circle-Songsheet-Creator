@@ -1,21 +1,37 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ lang }}"{% if theme %} data-theme="{{ theme }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Singkreis · Liederverwaltung{% endblock %}</title>
+  <title>{% block title %}{{ _("Liederverwaltung") }}{% endblock %}</title>
+  <script>
+    // Noch keine Wahl getroffen: wie das Betriebssystem. Im <head>, damit nichts hell aufblitzt.
+    if (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
   <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="topbar">
     <div class="wrap">
-      <a class="brand" href="/">
-        <span class="brand-text">Liederverwaltung von</span>
-        {% if has_logo %}<img class="brand-logo" src="{{ url_for('logo') }}" alt="deep flow mode">
+      <a class="brand{{ ' dual' if has_dark_logo }}" href="/">
+        {% if has_logo %}<img class="brand-logo logo-light" src="{{ url_for('logo') }}" alt="deep flow mode">
+        {% if has_dark_logo %}<img class="brand-logo logo-dark" src="{{ url_for('logo_dark') }}" alt="deep flow mode">{% endif %}
         {% else %}<span class="brand-fallback"><span class="bf-deep">deep</span> <span class="bf-flow">flow</span> <span class="bf-mode">mode</span></span>{% endif %}
+        <span class="brand-title">{{ _("Liederverwaltung") }}</span>
       </a>
-      <span class="tag">Lieder verwalten &amp; Liedzettel drucken</span>
+      <div class="switches">
+        <nav class="lang-switch" aria-label="{{ _('Sprache') }}">
+          <a class="{{ 'on' if lang == 'de' }}" href="/sprache/de">DE</a>
+          <a class="{{ 'on' if lang == 'en' }}" href="/sprache/en">EN</a>
+        </nav>
+        <button type="button" class="theme-switch" onclick="toggleTheme()"
+                title="{{ _('Hell/Dunkel umschalten') }}" aria-label="{{ _('Hell/Dunkel umschalten') }}">
+          <span class="when-light">🌙</span><span class="when-dark">☀️</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -24,9 +40,17 @@
   </main>
 
   <footer class="footer">
-    <div class="wrap">Lokale Datenbank: <code>data/{{ db_name }}</code> · <a href="/installation">Installationshilfe</a></div>
+    <div class="wrap">{{ _("Lokale Datenbank") }}: <code>data/{{ db_name }}</code> · <a href="/installation">{{ _("Installationshilfe") }}</a></div>
   </footer>
 
+  <script>
+    function toggleTheme(){
+      var root = document.documentElement;
+      var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      document.cookie = 'theme=' + next + '; path=/; max-age=31536000; SameSite=Lax';
+    }
+  </script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
