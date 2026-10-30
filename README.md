@@ -139,3 +139,10 @@ Infos (Telegram) und Community (Telegram). Die Bilder liegen nicht im Repo, das 
 
 Deine eigenen Links trägst du in [`app/config.py`](app/config.py) unter `QR_LINKS` ein
 (Reihenfolge = links → rechts). Beim nächsten Sheet werden die QR-Bilder automatisch neu erzeugt.
+
+## Lizenz
+
+Frei nutzbar als Open Source unter der [MIT-Lizenz](LICENSE).
+
+Das Logo (auch als App-Icon) und der Name „deep flow mode“ sind von der Lizenz ausgenommen. Wer das Tool weitergibt,
+ersetzt das Logo bitte durch ein eigenes (siehe „Eigenes Logo im Kopfband“).
